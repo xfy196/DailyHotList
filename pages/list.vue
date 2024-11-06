@@ -5,8 +5,7 @@ import type { IRoute, IHotInfo } from "~/types";
 interface INewRoute extends IRoute {
   checked: boolean;
 }
-const icons: Ref<Record<string, string>> = useStorage("icons", {});
-
+const icons: Record<string, string> = getIcons();
 const route = useRoute();
 const router = useRouter();
 const type = ref(route.query.type);
@@ -36,20 +35,23 @@ watch(
 );
 
 const hots = useStorage<Array<INewRoute>>("hots", []);
-const handleToHotList = (path: string) => {
+const handleToHotList = (path: string, name: string) => {
   router.replace({
     path: route.path,
     query: {
-      type: path.slice(1),
+      type: name,
     },
   });
 };
-const getTagType = (path: string) =>
-  type.value === path.slice(1) ? "primary" : "default";
+const getTagType = (name: string) =>
+  type.value === name ? "primary" : "default";
 
-const getLogo = (path: string) => {
-  let url = icons.value[path.slice(1).toLowerCase()];
+const getLogo = (name: string) => {
+  let url = icons[name.toLowerCase()];
   return url || "https://placehold.dtool.tech/64x64?text=avatar";
+};
+const getTitle = (name: string) => {
+  return getHotTitle()[name] ?? "";
 };
 </script>
 
@@ -59,8 +61,8 @@ const getLogo = (path: string) => {
       <!-- tag的循环 -->
       <n-space>
         <n-tag
-          @click.stop="handleToHotList(hot.path)"
-          :type="getTagType(hot.path)"
+          @click.stop="handleToHotList(hot.path, hot.name)"
+          :type="getTagType(hot.name)"
           size="large"
           round
           v-for="hot in hots"
@@ -71,24 +73,28 @@ const getLogo = (path: string) => {
               round
               fallback-src="https://placehold.dtool.tech/64x64?text=avatar"
               color="#fffff00"
-              :src="getLogo(hot.path)"
+              :src="getLogo(hot.name)"
             />
           </template>
-          {{ hot.name }}
+          {{ getTitle(hot.name) }}
         </n-tag>
       </n-space>
     </div>
     <n-list hoverable clickable>
-      <n-skeleton height="24px" round v-if="status==='pending'"text :repeat="20" />
+      <n-skeleton
+        height="24px"
+        round
+        v-if="status === 'pending'"
+        text
+        :repeat="20"
+      />
       <n-list-item v-else v-for="hot in posts" :key="hot.id">
-        <nuxt-link target="_blank" class=" flex justify-between":to="hot.url">
+        <nuxt-link target="_blank" class="flex justify-between" :to="hot.url">
           <n-space vertical>
             <span>
               {{ hot.title }}
             </span>
-            <span v-if="hot.author">
-              作者:{{ hot.author }}
-            </span>
+            <span v-if="hot.author"> 作者:{{ hot.author }} </span>
           </n-space>
           <span>{{ useDateFormat(hot.timestamp, "YYYY-MM-DD HH:mm:ss") }}</span>
         </nuxt-link>

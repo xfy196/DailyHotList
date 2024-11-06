@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import {useStorage} from "@vueuse/core"
+import { useStorage } from "@vueuse/core";
 import { type ICardInfo, type IRoute } from "~/types";
 import { Refresh } from "@vicons/tabler";
 import { useThemeVars } from "naive-ui";
 const { route } = defineProps<{
   route: IRoute;
 }>();
-const icons: Ref<Record<string, string>> = useStorage("icons", {})
+const icons: Ref<Record<string, string>> = useStorage("icons", {});
+const hots = useStorage<Array<IRoute>>("hots", []);
 const router = useRouter();
 const info = ref<ICardInfo>();
 const loading = ref(false);
@@ -25,7 +26,12 @@ const requestInfo = async () => {
       }
     );
     if (data.code === 200) {
+      // 如果请求成功,需要同步hots对应的title
       info.value = data;
+      const findIndex = hots.value.findIndex((item) => item.name === data.name);
+      if (findIndex >= 0) {
+        hots.value[findIndex].title = data.title;
+      }
     }
   } catch (err) {
     error.value = true;
@@ -60,13 +66,13 @@ const handleToList = () => {
   router.push({
     path: "/list",
     query: {
-      type: route.path.slice(1)
+      type: route.name,
     },
   });
 };
-const getLogo = (path: string) => {
-  return icons.value[path.slice(1).toLowerCase()]
-}
+const getLogo = (name: string) => {
+  return icons.value[name.toLowerCase()];
+};
 </script>
 
 <template>
@@ -74,14 +80,12 @@ const getLogo = (path: string) => {
     <template #header>
       <div class="flex items-center">
         <img
-          v-if="info?.link && getLogo(route.path)"
+          v-if="info?.link && getLogo(route.name)"
           class="w-6 h-6 mr-2"
-          :src="getLogo(route.path)"
+          :src="getLogo(route.name)"
           alt=""
         />
-        <span class="truncate text-nowrap">{{
-          info?.title ?? route.name
-        }}</span>
+        <span class="truncate text-nowrap">{{ info?.title }}</span>
       </div>
     </template>
     <template #header-extra>
