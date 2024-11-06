@@ -2,6 +2,7 @@
 import { useThemeVars } from "naive-ui";
 import { useStorage } from "@vueuse/core";
 import type { IRoute } from "~/types";
+import { vDraggable } from "vue-draggable-plus";
 const themeVars = useThemeVars();
 const icons: Record<string, string> = getIcons();
 const bgPrimaryColor = themeVars.value.primaryColor;
@@ -13,8 +14,8 @@ const getLogo = (name: string) => {
   return url || "https://placehold.dtool.tech/64x64?text=avatar";
 };
 const getTitle = (name: string) => {
-    return getHotTitle()[name] ?? ''
-}
+  return getHotTitle()[name] ?? "";
+};
 </script>
 
 <template>
@@ -55,12 +56,24 @@ const getTitle = (name: string) => {
         </n-text>
         <!-- 榜单列表 -->
         <div class="mt-2">
-          <n-grid layout-shift-disabled x-gap="12" y-gap="12" :cols="4">
+          <n-grid
+            v-draggable="[
+              hots,
+              {
+                animation: 150,
+                ghostClass: 'ghost',
+              },
+            ]"
+            layout-shift-disabled
+            x-gap="12"
+            y-gap="12"
+            :cols="4"
+          >
             <n-gi v-for="hot in hots" :key="hot.path">
               <div class="flex items-center justify-between px-2">
                 <div class="flex items-center">
                   <n-avatar
-                  size="small"
+                    size="small"
                     round
                     fallback-src="https://placehold.dtool.tech/64x64?text=avatar"
                     color="#fffff00"
