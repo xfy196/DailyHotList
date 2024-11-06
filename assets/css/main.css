@@ -1,0 +1,4 @@
+#nprogress .bar{
+    --primary-color: #18a058;
+    background: var(--primary-color) !important;
+}
