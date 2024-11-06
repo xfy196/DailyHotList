@@ -3,16 +3,7 @@ import { useStorage } from "@vueuse/core";
 import { Refresh, Moon, Sun, Menu2 } from "@vicons/tabler";
 import { Lunar } from "lunar-javascript";
 const icons = useStorage("icons", {}, localStorage);
-await useAsyncData("icons", () => $fetch("/api/hoticon"), {
-  transform: (data: any) => {
-    if (data.code === 200) {
-      icons.value = data.data;
-      return data.data;
-    }
-    icons.value = {};
-    return {};
-  },
-});
+icons.value = getIcons()
 const isDark = useDark();
 const router = useRouter();
 const toogleDark = useToggle(isDark);

@@ -1,7 +1,5 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
 import AutoImport from "unplugin-auto-import/vite";
 import Components from "unplugin-vue-components/vite";
-import { useThemeVars } from "naive-ui";
 import { NaiveUiResolver } from "unplugin-vue-components/resolvers";
 import { presetUno } from "unocss";
 export default defineNuxtConfig({
