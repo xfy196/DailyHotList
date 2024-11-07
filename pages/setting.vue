@@ -64,13 +64,15 @@ const getTitle = (name: string) => {
                 ghostClass: 'ghost',
               },
             ]"
-            layout-shift-disabled
             x-gap="12"
             y-gap="12"
-            :cols="4"
+            responsive="screen"
+            cols="2xl:6 xl:5 l:4 m:3 s:2 1"
           >
             <n-gi v-for="hot in hots" :key="hot.path">
-              <div class="flex items-center justify-between px-2">
+              <div
+                class="flex bg-[#f3f6ff] py-6 rounded-lg items-center justify-between px-2"
+              >
                 <div class="flex items-center">
                   <n-avatar
                     size="small"

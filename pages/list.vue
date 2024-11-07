@@ -53,6 +53,7 @@ const getLogo = (name: string) => {
 const getTitle = (name: string) => {
   return getHotTitle()[name] ?? "";
 };
+
 </script>
 
 <template>
@@ -80,7 +81,7 @@ const getTitle = (name: string) => {
         </n-tag>
       </n-space>
     </div>
-    <n-list hoverable clickable>
+    <n-list class="mt-2" hoverable clickable>
       <n-skeleton
         height="24px"
         round
@@ -88,15 +89,27 @@ const getTitle = (name: string) => {
         text
         :repeat="20"
       />
-      <n-list-item v-else v-for="hot in posts" :key="hot.id">
+      <n-list-item v-else v-for="(hot, index) in posts" :key="hot.id">
         <nuxt-link target="_blank" class="flex justify-between" :to="hot.url">
-          <n-space vertical>
-            <span>
-              {{ hot.title }}
-            </span>
-            <span v-if="hot.author"> 作者:{{ hot.author }} </span>
+          <n-space>
+            <div
+              :class="{
+                'bg-orange-500': index === 1,
+                'bg-red-500': index === 0,
+                'bg-yellow-500': index === 2,
+                'bg-gray-300': index > 2,
+              }"
+              class="min-w-6 min-h-6 flex-[0 0 auto] flex items-center justify-center text-white rounded-md"
+            >
+              {{ index + 1 }}
+            </div>
+            <n-space vertical>
+              <n-text class=" text-lg">
+                {{ hot.title }}
+              </n-text>
+              <n-text v-if="hot.author"> 作者:{{ hot.author }} </n-text>
+            </n-space>
           </n-space>
-          <span>{{ useDateFormat(hot.timestamp, "YYYY-MM-DD HH:mm:ss") }}</span>
         </nuxt-link>
       </n-list-item>
     </n-list>

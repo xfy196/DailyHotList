@@ -13,6 +13,7 @@ const info = ref<ICardInfo>();
 const loading = ref(false);
 const error = ref(false);
 const themeVars = useThemeVars();
+console.log(themeVars.value.primaryColor)
 const requestInfo = async () => {
   try {
     error.value = false;
