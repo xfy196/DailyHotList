@@ -9,7 +9,7 @@ const icons: Record<string, string> = getIcons();
 const route = useRoute();
 const router = useRouter();
 const type = ref(route.query.type);
-const { data: posts, status } = await useAsyncData(
+const { data: data, status } = await useAsyncData(
   "hot",
   async () =>
     $fetch(`https://hotapi.xxytime.top/${type.value}`, {
@@ -20,9 +20,13 @@ const { data: posts, status } = await useAsyncData(
   {
     transform(data: any) {
       if (data.code === 200) {
-        return data.data as IHotInfo[];
+        return data as {
+          data: IHotInfo[];
+          title: string;
+          name: string;
+        };
       }
-      return [];
+      return { data: [], title: "", name: '' };
     },
     watch: [type],
   }
@@ -53,7 +57,6 @@ const getLogo = (name: string) => {
 const getTitle = (name: string) => {
   return getHotTitle()[name] ?? "";
 };
-
 </script>
 
 <template>
@@ -89,29 +92,34 @@ const getTitle = (name: string) => {
         text
         :repeat="20"
       />
-      <n-list-item v-else v-for="(hot, index) in posts" :key="hot.id">
-        <nuxt-link target="_blank" class="flex justify-between" :to="hot.url">
-          <n-space>
-            <div
-              :class="{
-                'bg-orange-500': index === 1,
-                'bg-red-500': index === 0,
-                'bg-yellow-500': index === 2,
-                'bg-gray-300': index > 2,
-              }"
-              class="min-w-6 min-h-6 flex-[0 0 auto] flex items-center justify-center text-white rounded-md"
-            >
-              {{ index + 1 }}
-            </div>
-            <n-space vertical>
-              <n-text class=" text-lg">
-                {{ hot.title }}
-              </n-text>
-              <n-text v-if="hot.author"> 作者:{{ hot.author }} </n-text>
+      <template v-else>
+        <div class="text-3xl font-bold mb-2 text-center">
+          {{ getTitle(data?.name) }}
+        </div>
+        <n-list-item v-for="(hot, index) in data?.data" :key="hot.id">
+          <nuxt-link target="_blank" class="flex justify-between" :to="hot.url">
+            <n-space>
+              <div
+                :class="{
+                  'bg-orange-500': index === 1,
+                  'bg-red-500': index === 0,
+                  'bg-yellow-500': index === 2,
+                  'bg-gray-300': index > 2,
+                }"
+                class="min-w-6 min-h-6 flex-[0 0 auto] flex items-center justify-center text-white rounded-md"
+              >
+                {{ index + 1 }}
+              </div>
+              <n-space vertical>
+                <n-text class="text-lg">
+                  {{ hot.title }}
+                </n-text>
+                <n-text v-if="hot.author"> 作者:{{ hot.author }} </n-text>
+              </n-space>
             </n-space>
-          </n-space>
-        </nuxt-link>
-      </n-list-item>
+          </nuxt-link>
+        </n-list-item>
+      </template>
     </n-list>
   </div>
 </template>
