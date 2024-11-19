@@ -11,7 +11,7 @@ const router = useRouter();
 const toogleDark = useToggle(isDark);
 const formatted = useDateFormat(useNow(), "YYYY-MM-DD HH:mm:ss");
 const showAnimation = ref(false);
-const hots = useStorage<Array<IRoute>>("hots", [], localStorage);
+const hots = useStorage<Array<IRoute>>("hots", []);
 await useAsyncData(
   "all",
   () =>
