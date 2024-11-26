@@ -12,9 +12,7 @@ const toogleDark = useToggle(isDark);
 const formatted = useDateFormat(useNow(), "YYYY-MM-DD HH:mm:ss");
 const showAnimation = ref(false);
 const hots = useStorage<Array<IRoute>>("hots", []);
-const fetchData = async () => {
-  await nextTick();
-  await useAsyncData(
+  const {refresh} = await useAsyncData(
     "all",
     () =>
       $fetch("https://hotapi.xxytime.top/all", {
@@ -23,7 +21,7 @@ const fetchData = async () => {
         },
       }),
     {
-      lazy: true,
+      immediate: false,
       transform: (data: any) => {
         if (data.code === 200) {
           data.routes = data.routes.filter(
@@ -52,8 +50,10 @@ const fetchData = async () => {
       },
     }
   );
-};
-fetchData();
+
+  onBeforeMount(() => {
+    refresh()
+  })
 const handleScroll = (e: Event) => {
   if (e.target && e.target?.scrollTop > 0) {
     showAnimation.value = !fixNavbar.value;
