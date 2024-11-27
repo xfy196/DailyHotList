@@ -12,43 +12,48 @@ const toogleDark = useToggle(isDark);
 const formatted = useDateFormat(useNow(), "YYYY-MM-DD HH:mm:ss");
 const showAnimation = ref(false);
 const hots = useStorage<Array<IRoute>>("hots", []);
-await useAsyncData(
-  "all",
-  () =>
-    $fetch("https://hotapi.xxytime.top/all", {
-      params: {
-        cache: true,
+  const {refresh} = await useAsyncData(
+    "all",
+    () =>
+      $fetch("https://hotapi.xxytime.top/all", {
+        params: {
+          cache: true,
+        },
+      }),
+    {
+      immediate: false,
+      transform: (data: any) => {
+        if (data.code === 200) {
+          data.routes = data.routes.filter(
+            (route: IRoute) =>
+              route.path &&
+              ![
+                "/csdn",
+                "/earthquake",
+                "/genshin",
+                "/honkai",
+                "/starrail",
+                "/netease-news",
+              ].includes(route.path)
+          );
+          hots.value = data.routes.map((item: IRoute) => {
+            item.show = true;
+            item.title = "";
+            return item;
+          });
+          return data;
+        }
+        return {
+          routes: [],
+          count: 0,
+        };
       },
-    }),
-  {
-    transform: (data: any) => {
-      if (data.code === 200) {
-        data.routes = data.routes.filter(
-          (route: IRoute) =>
-            route.path &&
-            ![
-              "/csdn",
-              "/earthquake",
-              "/genshin",
-              "/honkai",
-              "/starrail",
-              "/netease-news",
-            ].includes(route.path)
-        );
-        hots.value = data.routes.map((item: IRoute) => {
-          item.show = true;
-          item.title = "";
-          return item;
-        });
-        return data;
-      }
-      return {
-        routes: [],
-        count: 0,
-      };
-    },
-  }
-);
+    }
+  );
+
+  onBeforeMount(() => {
+    refresh()
+  })
 const handleScroll = (e: Event) => {
   if (e.target && e.target?.scrollTop > 0) {
     showAnimation.value = !fixNavbar.value;
