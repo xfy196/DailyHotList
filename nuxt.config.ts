@@ -37,5 +37,5 @@ export default defineNuxtConfig({
     nuxtLayers: true,
     presets: [presetUno()],
   },
-  css: ["@unocss/reset/tailwind.css", "nprogress/nprogress.css","~/assets/css/main.css"],
+  css: ["@unocss/reset/tailwind-compat.css", "nprogress/nprogress.css","~/assets/css/main.css"],
 });
