@@ -77,11 +77,11 @@ const handleRefresh = () => {
     class="h-screen"
   >
     <n-layout-header class="fixed top-0 z-50">
-      <div
+      <n-el
         :class="!showAnimation ? 'h-24' : 'h-18 border-b-2'"
         class="flex justify-evenly sm:px-6 md:px-10 lg:px-14 dark:border-b-[#ffffff17] dark: xl:px-16 2xl:px-20 px-4 items-center transition-all duration-300"
       >
-        <div
+        <n-el
           @click.stop="handleToHome"
           class="flex items-center flex-[0 0 auto]"
         >
@@ -91,24 +91,24 @@ const handleRefresh = () => {
             "
             alt=""
           />
-          <div class="cursor-pointer ml-2 hidden sm:block">
-            <h1 class="text-xl text-[#333639] dark:text-[white] font-bold">
+          <n-el class="cursor-pointer ml-2 hidden sm:block">
+            <n-el tag="h1" class="text-xl text-[#333639] dark:text-[white] font-bold">
               今日热榜
-            </h1>
+            </n-el>
             <h3 class="text-coolgray text-sm">立即吃瓜，热点一览无余</h3>
-          </div>
-        </div>
-        <div
+          </n-el>
+        </n-el>
+        <n-el
           class="flex-1 flex flex-col items-center justify-center items-center"
         >
-          <div>
+          <n-el>
             {{ formatted }}
-          </div>
-          <div>
+          </n-el>
+          <n-el>
             {{ lunarTimeStr }}
-          </div>
-        </div>
-        <div class="flex-[0 0 auto] hidden sm:flex justify-end items-center">
+          </n-el>
+        </n-el>
+        <n-el class="flex-[0 0 auto] hidden sm:flex justify-end items-center">
           <n-space>
             <n-popover trigger="hover">
               <template #trigger>
@@ -144,9 +144,9 @@ const handleRefresh = () => {
               设置
             </n-popover>
           </n-space>
-        </div>
+        </n-el>
         <!-- 移动端小屏幕下的样式 -->
-        <div class="block sm:hidden">
+        <n-el class="block sm:hidden">
           <n-popover placement="left-start" trigger="click">
             <template #trigger>
               <n-button secondary circle>
@@ -185,8 +185,8 @@ const handleRefresh = () => {
               </n-button>
             </n-space>
           </n-popover>
-        </div>
-      </div>
+        </n-el>
+      </n-el>
     </n-layout-header>
     <n-layout-content
       :native-scrollbar="false"
